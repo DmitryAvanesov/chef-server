@@ -10,11 +10,11 @@ ingredientsRouter.get("/", function (req, res) {
   });
 });
 
-// ingredientsRouter.post("/", function (req, res) {
-//   const ingredient = new Ingredient({ name: "Филе куриное", units: [1] });
-//   ingredient.save().then(() => {
-//     res.send({});
-//   });
-// });
+ingredientsRouter.post("/", function (req, res) {
+  const ingredient = new Ingredient(req.body);
+  ingredient.save().then((newIngredient) => {
+    res.send(newIngredient);
+  });
+});
 
 module.exports = ingredientsRouter;
