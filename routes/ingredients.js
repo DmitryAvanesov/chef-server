@@ -13,6 +13,8 @@ ingredientsRouter.get("/", function (req, res) {
 ingredientsRouter.post("/", function (req, res) {
   const ingredient = new Ingredient(req.body);
 
+  console.log(req.body);
+
   ingredient.save().then((newIngredient) => {
     res.send(newIngredient);
   });
