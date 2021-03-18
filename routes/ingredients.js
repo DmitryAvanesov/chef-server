@@ -4,7 +4,7 @@ const ingredientsRouter = express.Router();
 
 const Ingredient = mongoose.model("Ingredient");
 
-ingredientsRouter.get("/", function (req, res) {
+ingredientsRouter.get("/", function (_req, res) {
   Ingredient.find().then((ingredients) => {
     res.send(ingredients);
   });
@@ -13,10 +13,16 @@ ingredientsRouter.get("/", function (req, res) {
 ingredientsRouter.post("/", function (req, res) {
   const ingredient = new Ingredient(req.body);
 
-  console.log(req.body);
-
   ingredient.save().then((newIngredient) => {
     res.send(newIngredient);
+  });
+});
+
+ingredientsRouter.delete("/:id", function (req, res) {
+  const { id } = req.params;
+
+  Ingredient.deleteOne({ _id: id }).then((result) => {
+    res.send(result);
   });
 });
 
