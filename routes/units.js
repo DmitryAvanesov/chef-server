@@ -18,4 +18,12 @@ unitsRouter.post("/", function (req, res) {
   });
 });
 
+unitsRouter.delete("/:id", function (req, res) {
+  const { id } = req.params;
+
+  Unit.deleteOne({ _id: id }).then((result) => {
+    res.send(result);
+  });
+});
+
 module.exports = unitsRouter;
