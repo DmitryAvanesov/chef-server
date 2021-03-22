@@ -18,6 +18,14 @@ unitsRouter.post("/", function (req, res) {
   });
 });
 
+unitsRouter.patch("/:id", function (req, res) {
+  const { id } = req.params;
+
+  Unit.findByIdAndUpdate(id, req.body).then((unit) => {
+    res.send(unit);
+  });
+});
+
 unitsRouter.delete("/:id", function (req, res) {
   const { id } = req.params;
 
