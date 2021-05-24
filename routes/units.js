@@ -21,7 +21,7 @@ unitsRouter.post("/", function (req, res) {
 unitsRouter.patch("/:id", function (req, res) {
   const { id } = req.params;
 
-  Unit.findByIdAndUpdate(id, req.body).then((unit) => {
+  Unit.findByIdAndUpdate(id, req.body, { new: true }).then((unit) => {
     res.send(unit);
   });
 });
@@ -29,7 +29,7 @@ unitsRouter.patch("/:id", function (req, res) {
 unitsRouter.delete("/:id", function (req, res) {
   const { id } = req.params;
 
-  Unit.deleteOne({ _id: id }).then((result) => {
+  Unit.findByIdAndDelete(id).then((result) => {
     res.send(result);
   });
 });
