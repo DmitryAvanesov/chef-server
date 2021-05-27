@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
-const unitSchema = require("./units");
 
 const ingredientSchema = new mongoose.Schema({
   name: String,
-  units: [unitSchema],
+  units: [mongoose.Types.ObjectId],
   image: String,
 });
 

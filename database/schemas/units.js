@@ -5,5 +5,3 @@ const unitSchema = new mongoose.Schema({
 });
 
 mongoose.model("Unit", unitSchema);
-
-module.exports = unitSchema;
