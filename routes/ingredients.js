@@ -6,36 +6,23 @@ const Ingredient = mongoose.model("Ingredient");
 const Unit = mongoose.model("Unit");
 
 ingredientsRouter.get("/", function (_req, res) {
-  Ingredient.find().then((ingredients) => {
-    Unit.find().then((units) => {
-      for (const ingredient of ingredients) {
-        for (const [index] of ingredient.units.entries()) {
-          console.log(
-            units.find((unit) => {
-              console.log(
-                unit._id,
-                ingredient.units[index],
-                unit._id == ingredient.units[index]
-              );
-            })
-          );
-
-          ingredient.units[index] = units.find(
-            (unit) => unit._id === ingredient.units[index]
-          );
-        }
-      }
-
+  Ingredient.find()
+    .populate("units")
+    .then((ingredients) => {
       res.send(ingredients);
     });
-  });
 });
 
 ingredientsRouter.post("/", function (req, res) {
   const ingredient = new Ingredient(req.body);
 
   ingredient.save().then((newIngredient) => {
-    res.send(newIngredient);
+    newIngredient
+      .populate("units")
+      .execPopulate()
+      .then((populatedIngredient) => {
+        res.send(populatedIngredient);
+      });
   });
 });
 
@@ -44,7 +31,12 @@ ingredientsRouter.patch("/:id", function (req, res) {
 
   Ingredient.findByIdAndUpdate(id, req.body, { new: true }).then(
     (ingredient) => {
-      res.send(ingredient);
+      ingredient
+        .populate("units")
+        .execPopulate()
+        .then((populatedIngredient) => {
+          res.send(populatedIngredient);
+        });
     }
   );
 });

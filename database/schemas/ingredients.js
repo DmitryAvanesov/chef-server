@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const ingredientSchema = new mongoose.Schema({
   name: String,
-  units: [mongoose.Types.ObjectId],
+  units: [{ type: mongoose.Types.ObjectId, ref: "Unit" }],
   image: String,
 });
 
