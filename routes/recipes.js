@@ -8,6 +8,7 @@ recipesRouter.get("/", function (_req, res) {
   Recipe.find()
     .populate("ingredients")
     .then((recipes) => {
+      console.log(recipes);
       res.send(recipes);
     });
 });
@@ -28,11 +29,14 @@ recipesRouter.post("/", function (req, res) {
 recipesRouter.patch("/:id", function (req, res) {
   const { id } = req.params;
 
-  Recipe.findByIdAndUpdate(id, req.body, { new: true }).then((recipe) => {
+  Recipe.findByIdAndUpdate(id, req.body, {
+    new: true,
+  }).then((recipe) => {
     recipe
       .populate("ingredients")
       .execPopulate()
       .then((populatedRecipe) => {
+        console.log(populatedRecipe);
         res.send(populatedRecipe);
       });
   });

@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const ingredientsRouter = express.Router();
 
 const Ingredient = mongoose.model("Ingredient");
-const Unit = mongoose.model("Unit");
 
 ingredientsRouter.get("/", function (_req, res) {
   Ingredient.find()
