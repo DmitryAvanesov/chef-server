@@ -6,9 +6,19 @@ const Recipe = mongoose.model("Recipe");
 
 recipesRouter.get("/", function (_req, res) {
   Recipe.find()
-    .populate("ingredients")
+    .populate({
+      path: "ingredients",
+      populate: [
+        {
+          path: "ingredient",
+          populate: "units",
+        },
+        {
+          path: "unit",
+        },
+      ],
+    })
     .then((recipes) => {
-      console.log(recipes);
       res.send(recipes);
     });
 });
@@ -33,10 +43,20 @@ recipesRouter.patch("/:id", function (req, res) {
     new: true,
   }).then((recipe) => {
     recipe
-      .populate("ingredients")
+      .populate({
+        path: "ingredients",
+        populate: [
+          {
+            path: "ingredient",
+            populate: "units",
+          },
+          {
+            path: "unit",
+          },
+        ],
+      })
       .execPopulate()
       .then((populatedRecipe) => {
-        console.log(populatedRecipe);
         res.send(populatedRecipe);
       });
   });
