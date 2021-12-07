@@ -6,18 +6,21 @@ const Recipe = mongoose.model("Recipe");
 
 recipesRouter.get("/", function (_req, res) {
   Recipe.find()
-    .populate({
-      path: "ingredients",
-      populate: [
-        {
-          path: "ingredient",
-          populate: "units",
-        },
-        {
-          path: "unit",
-        },
-      ],
-    })
+    .populate([
+      {
+        path: "ingredients",
+        populate: [
+          {
+            path: "ingredient",
+            populate: "units",
+          },
+          {
+            path: "unit",
+          },
+        ],
+      },
+      { path: "stages" },
+    ])
     .then((recipes) => {
       res.send(recipes);
     });

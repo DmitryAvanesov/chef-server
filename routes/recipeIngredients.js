@@ -5,8 +5,7 @@ const recipeIngredientsRouter = express.Router();
 const RecipeIngredient = mongoose.model("RecipeIngredient");
 
 recipeIngredientsRouter.get("/", function (_req, res) {
-  RecipeIngredient.find()
-  .then((recipeIngredients) => {
+  RecipeIngredient.find().then((recipeIngredients) => {
     res.send(recipeIngredients);
   });
 });
@@ -47,6 +46,7 @@ recipeIngredientsRouter.patch("/:id", function (req, res) {
         ])
         .execPopulate()
         .then((populatedRecipeIngredient) => {
+          console.log(populatedRecipeIngredient);
           res.send(populatedRecipeIngredient);
         });
     }
