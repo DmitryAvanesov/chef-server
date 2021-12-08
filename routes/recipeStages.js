@@ -18,4 +18,22 @@ recipeStageRouter.post("/", function (req, res) {
   });
 });
 
+recipeStageRouter.patch("/:id", function (req, res) {
+  const { id } = req.params;
+
+  RecipeStage.findByIdAndUpdate(id, req.body, { new: true }).then(
+    (recipeIngredient) => {
+      res.send(recipeIngredient);
+    }
+  );
+});
+
+recipeStageRouter.delete("/:id", function (req, res) {
+  const { id } = req.params;
+
+  RecipeStage.findByIdAndDelete(id).then((result) => {
+    res.send(result);
+  });
+});
+
 module.exports = recipeStageRouter;

@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const recipesRouter = express.Router();
 
 const Recipe = mongoose.model("Recipe");
+const RecipeStage = mongoose.model("RecipeStage");
 
 recipesRouter.get("/", function (_req, res) {
   Recipe.find()
@@ -31,7 +32,21 @@ recipesRouter.post("/", function (req, res) {
 
   recipe.save().then((newRecipe) => {
     newRecipe
-      .populate("ingredients")
+      .populate([
+        {
+          path: "ingredients",
+          populate: [
+            {
+              path: "ingredient",
+              populate: "units",
+            },
+            {
+              path: "unit",
+            },
+          ],
+        },
+        { path: "stages" },
+      ])
       .execPopulate()
       .then((populatedRecipe) => {
         res.send(populatedRecipe);
@@ -42,27 +57,37 @@ recipesRouter.post("/", function (req, res) {
 recipesRouter.patch("/:id", function (req, res) {
   const { id } = req.params;
 
-  Recipe.findByIdAndUpdate(id, req.body, {
-    new: true,
-  }).then((recipe) => {
-    recipe
-      .populate({
-        path: "ingredients",
-        populate: [
-          {
-            path: "ingredient",
-            populate: "units",
-          },
-          {
-            path: "unit",
-          },
-        ],
-      })
-      .execPopulate()
-      .then((populatedRecipe) => {
-        res.send(populatedRecipe);
+  RecipeStage.findOneAndUpdate(
+    { number: 0 },
+    { number: req.body.stages.length },
+    { new: true },
+    () => {
+      Recipe.findByIdAndUpdate(id, req.body, {
+        new: true,
+      }).then((recipe) => {
+        recipe
+          .populate([
+            {
+              path: "ingredients",
+              populate: [
+                {
+                  path: "ingredient",
+                  populate: "units",
+                },
+                {
+                  path: "unit",
+                },
+              ],
+            },
+            { path: "stages" },
+          ])
+          .execPopulate()
+          .then((populatedRecipe) => {
+            res.send(populatedRecipe);
+          });
       });
-  });
+    }
+  );
 });
 
 module.exports = recipesRouter;
