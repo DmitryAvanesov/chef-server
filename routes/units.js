@@ -1,16 +1,18 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
+const corsOptions = require("../cors");
 const unitsRouter = express.Router();
 
 const Unit = mongoose.model("Unit");
 
-unitsRouter.get("/", function (req, res) {
+unitsRouter.get("/", cors(corsOptions), (req, res) => {
   Unit.find().then((units) => {
     res.send(units);
   });
 });
 
-unitsRouter.post("/", function (req, res) {
+unitsRouter.post("/", cors(corsOptions), (req, res) => {
   const unit = new Unit(req.body);
 
   unit.save().then((newUnit) => {
@@ -18,7 +20,7 @@ unitsRouter.post("/", function (req, res) {
   });
 });
 
-unitsRouter.patch("/:id", function (req, res) {
+unitsRouter.patch("/:id", cors(corsOptions), (req, res) => {
   const { id } = req.params;
 
   Unit.findByIdAndUpdate(id, req.body, { new: true }).then((unit) => {
@@ -26,7 +28,7 @@ unitsRouter.patch("/:id", function (req, res) {
   });
 });
 
-unitsRouter.delete("/:id", function (req, res) {
+unitsRouter.delete("/:id", cors(corsOptions), (req, res) => {
   const { id } = req.params;
 
   Unit.findByIdAndDelete(id).then((result) => {

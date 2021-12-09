@@ -23,7 +23,7 @@ app.use(
     extended: true,
   })
 );
-app.use(cors({ origin: process.env.API_ORIGIN }));
+
 app.use("/recipes", recipesRouter);
 app.use("/recipe-ingredients", recipeIngredientsRouter);
 app.use("/recipe-stages", recipeStagesRouter);

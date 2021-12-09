@@ -1,11 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
+const corsOptions = require("../cors");
 const recipesRouter = express.Router();
 
 const Recipe = mongoose.model("Recipe");
 const RecipeStage = mongoose.model("RecipeStage");
 
-recipesRouter.get("/", function (_req, res) {
+recipesRouter.get("/", cors(corsOptions), (_req, res) => {
   Recipe.find()
     .populate([
       {
@@ -27,7 +29,7 @@ recipesRouter.get("/", function (_req, res) {
     });
 });
 
-recipesRouter.post("/", function (req, res) {
+recipesRouter.post("/", cors(corsOptions), (req, res) => {
   const recipe = new Recipe(req.body);
 
   recipe.save().then((newRecipe) => {
@@ -54,7 +56,7 @@ recipesRouter.post("/", function (req, res) {
   });
 });
 
-recipesRouter.patch("/:id", function (req, res) {
+recipesRouter.patch("/:id", cors(corsOptions), (req, res) => {
   const { id } = req.params;
 
   RecipeStage.findOneAndUpdate(

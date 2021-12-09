@@ -1,10 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
+const corsOptions = require("../cors");
 const ingredientsRouter = express.Router();
 
 const Ingredient = mongoose.model("Ingredient");
 
-ingredientsRouter.get("/", function (_req, res) {
+ingredientsRouter.get("/", cors(corsOptions), (_req, res) => {
   Ingredient.find()
     .populate("units")
     .then((ingredients) => {
@@ -12,7 +14,7 @@ ingredientsRouter.get("/", function (_req, res) {
     });
 });
 
-ingredientsRouter.post("/", function (req, res) {
+ingredientsRouter.post("/", cors(corsOptions), (req, res) => {
   const ingredient = new Ingredient(req.body);
 
   ingredient.save().then((newIngredient) => {
@@ -25,7 +27,7 @@ ingredientsRouter.post("/", function (req, res) {
   });
 });
 
-ingredientsRouter.patch("/:id", function (req, res) {
+ingredientsRouter.patch("/:id", cors(corsOptions), (req, res) => {
   const { id } = req.params;
 
   Ingredient.findByIdAndUpdate(id, req.body, { new: true }).then(
@@ -40,7 +42,7 @@ ingredientsRouter.patch("/:id", function (req, res) {
   );
 });
 
-ingredientsRouter.delete("/:id", function (req, res) {
+ingredientsRouter.delete("/:id", cors(corsOptions), (req, res) => {
   const { id } = req.params;
 
   Ingredient.findByIdAndDelete(id).then((result) => {

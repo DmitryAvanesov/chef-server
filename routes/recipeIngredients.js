@@ -1,16 +1,18 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
+const corsOptions = require("../cors");
 const recipeIngredientsRouter = express.Router();
 
 const RecipeIngredient = mongoose.model("RecipeIngredient");
 
-recipeIngredientsRouter.get("/", function (_req, res) {
+recipeIngredientsRouter.get("/", cors(corsOptions), (_req, res) => {
   RecipeIngredient.find().then((recipeIngredients) => {
     res.send(recipeIngredients);
   });
 });
 
-recipeIngredientsRouter.post("/", function (req, res) {
+recipeIngredientsRouter.post("/", cors(corsOptions), (req, res) => {
   const recipeIngredient = new RecipeIngredient(req.body);
 
   recipeIngredient.save().then((newRecipeIngredient) => {
@@ -30,7 +32,7 @@ recipeIngredientsRouter.post("/", function (req, res) {
   });
 });
 
-recipeIngredientsRouter.patch("/:id", function (req, res) {
+recipeIngredientsRouter.patch("/:id", cors(corsOptions), (req, res) => {
   const { id } = req.params;
 
   RecipeIngredient.findByIdAndUpdate(id, req.body, { new: true }).then(
@@ -53,7 +55,7 @@ recipeIngredientsRouter.patch("/:id", function (req, res) {
   );
 });
 
-recipeIngredientsRouter.delete("/:id", function (req, res) {
+recipeIngredientsRouter.delete("/:id", cors(corsOptions), (req, res) => {
   const { id } = req.params;
 
   RecipeIngredient.findByIdAndDelete(id).then((result) => {
