@@ -1,6 +1,7 @@
 const express = require("express");
-const cors = require("cors");
 const Database = require("./database/database");
+const cors = require("cors");
+const corsOptions = require("./cors");
 
 require("dotenv").config();
 require("./database/schemas/recipes");
@@ -23,6 +24,7 @@ app.use(
     extended: true,
   })
 );
+app.use(cors(corsOptions));
 
 app.use("/recipes", recipesRouter);
 app.use("/recipe-ingredients", recipeIngredientsRouter);

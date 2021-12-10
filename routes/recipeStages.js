@@ -1,18 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require("cors");
-const corsOptions = require("../cors");
 const recipeStageRouter = express.Router();
 
 const RecipeStage = mongoose.model("RecipeStage");
 
-recipeStageRouter.get("/", cors(corsOptions), (_req, res) => {
+recipeStageRouter.get("/", (_req, res) => {
   RecipeStage.find().then((recipeStages) => {
     res.send(recipeStages);
   });
 });
 
-recipeStageRouter.post("/", cors(corsOptions), (req, res) => {
+recipeStageRouter.post("/", (req, res) => {
   const recipeStage = new RecipeStage(req.body);
 
   recipeStage.save().then((newRecipeStage) => {
@@ -20,7 +18,7 @@ recipeStageRouter.post("/", cors(corsOptions), (req, res) => {
   });
 });
 
-recipeStageRouter.patch("/:id", cors(corsOptions), (req, res) => {
+recipeStageRouter.patch("/:id", (req, res) => {
   const { id } = req.params;
 
   RecipeStage.findByIdAndUpdate(id, req.body, { new: true }).then(
@@ -30,7 +28,7 @@ recipeStageRouter.patch("/:id", cors(corsOptions), (req, res) => {
   );
 });
 
-recipeStageRouter.delete("/:id", cors(corsOptions), (req, res) => {
+recipeStageRouter.delete("/:id", (req, res) => {
   const { id } = req.params;
 
   RecipeStage.findByIdAndDelete(id).then((result) => {

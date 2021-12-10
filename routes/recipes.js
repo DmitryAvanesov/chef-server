@@ -1,13 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require("cors");
-const corsOptions = require("../cors");
 const recipesRouter = express.Router();
 
 const Recipe = mongoose.model("Recipe");
 const RecipeStage = mongoose.model("RecipeStage");
 
-recipesRouter.get("/", cors(corsOptions), (_req, res) => {
+recipesRouter.get("/", (_req, res) => {
   Recipe.find()
     .populate([
       {
@@ -29,7 +27,7 @@ recipesRouter.get("/", cors(corsOptions), (_req, res) => {
     });
 });
 
-recipesRouter.post("/", cors(corsOptions), (req, res) => {
+recipesRouter.post("/", (req, res) => {
   const recipe = new Recipe(req.body);
 
   recipe.save().then((newRecipe) => {
@@ -56,7 +54,7 @@ recipesRouter.post("/", cors(corsOptions), (req, res) => {
   });
 });
 
-recipesRouter.patch("/:id", cors(corsOptions), (req, res) => {
+recipesRouter.patch("/:id", (req, res) => {
   const { id } = req.params;
 
   RecipeStage.findOneAndUpdate(
@@ -90,6 +88,14 @@ recipesRouter.patch("/:id", cors(corsOptions), (req, res) => {
       });
     }
   );
+});
+
+recipesRouter.delete("/:id", (req, res) => {
+  const { id } = req.params;
+
+  Recipe.findByIdAndDelete(id).then((result) => {
+    res.send(result);
+  });
 });
 
 module.exports = recipesRouter;
