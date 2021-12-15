@@ -5,7 +5,7 @@ const recipesRouter = express.Router();
 const Recipe = mongoose.model("Recipe");
 const RecipeStage = mongoose.model("RecipeStage");
 
-recipesRouter.get("/", (_req, res) => {
+recipesRouter.get("/", (req, res) => {
   Recipe.find()
     .populate([
       {
@@ -23,7 +23,19 @@ recipesRouter.get("/", (_req, res) => {
       { path: "stages" },
     ])
     .then((recipes) => {
-      res.send(recipes);
+      res.send(
+        req.query.ingredients
+          ? recipes.filter((recipe) =>
+              recipe.ingredients
+                .map((recipeIngredient) =>
+                  recipeIngredient.ingredient._id.toString()
+                )
+                .some((ingredientId) =>
+                  req.query.ingredients.includes(ingredientId)
+                )
+            )
+          : recipes
+      );
     });
 });
 
