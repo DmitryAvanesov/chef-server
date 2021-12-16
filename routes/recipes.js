@@ -24,17 +24,17 @@ recipesRouter.get("/", (req, res) => {
     ])
     .then((recipes) => {
       res.send(
-        req.query.ingredients
-          ? recipes.filter((recipe) =>
-              recipe.ingredients
+        recipes.filter((recipe) =>
+          req.query.ingredients
+            ? recipe.ingredients
                 .map((recipeIngredient) =>
                   recipeIngredient.ingredient._id.toString()
                 )
                 .some((ingredientId) =>
                   req.query.ingredients.includes(ingredientId)
                 )
-            )
-          : recipes
+            : recipe
+        )
       );
     });
 });
@@ -74,9 +74,20 @@ recipesRouter.patch("/:id", (req, res) => {
     { number: req.body.stages.length },
     { new: true },
     () => {
-      Recipe.findByIdAndUpdate(id, req.body, {
-        new: true,
-      }).then((recipe) => {
+      Recipe.findByIdAndUpdate(
+        id,
+        {
+          ...req.body,
+          minutes: req.body.stages.reduce(
+            (previousValue, currentValue) =>
+              previousValue + currentValue.minutes,
+            0
+          ),
+        },
+        {
+          new: true,
+        }
+      ).then((recipe) => {
         recipe
           .populate([
             {
