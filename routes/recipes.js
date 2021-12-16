@@ -6,6 +6,8 @@ const Recipe = mongoose.model("Recipe");
 const RecipeStage = mongoose.model("RecipeStage");
 
 recipesRouter.get("/", (req, res) => {
+  const { ingredients, minutesFrom, minutesTo } = req.query;
+
   Recipe.find()
     .populate([
       {
@@ -24,16 +26,17 @@ recipesRouter.get("/", (req, res) => {
     ])
     .then((recipes) => {
       res.send(
-        recipes.filter((recipe) =>
-          req.query.ingredients
-            ? recipe.ingredients
-                .map((recipeIngredient) =>
-                  recipeIngredient.ingredient._id.toString()
-                )
-                .some((ingredientId) =>
-                  req.query.ingredients.includes(ingredientId)
-                )
-            : recipe
+        recipes.filter(
+          (recipe) =>
+            (ingredients
+              ? recipe.ingredients
+                  .map((recipeIngredient) =>
+                    recipeIngredient.ingredient._id.toString()
+                  )
+                  .some((ingredientId) => ingredients.includes(ingredientId))
+              : true) &&
+            (minutesFrom ? (recipe.minutes || 0) >= minutesFrom : true) &&
+            (minutesTo ? (recipe.minutes || 0) <= minutesTo : true)
         )
       );
     });
